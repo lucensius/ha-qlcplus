@@ -1,0 +1,194 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to QLC+",
+        "description": "QLC+ must run in web mode (`qlcplus -w`).",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "username": "Username",
+          "password": "Password"
+        },
+        "data_description": {
+          "host": "IP address or host name of the computer running QLC+.",
+          "port": "Web access port of QLC+ (default 9999).",
+          "username": "Only if QLC+ runs with web authentication (`-wa`)."
+        }
+      },
+      "project": {
+        "title": "Upload project",
+        "description": "Connected to QLC+ {version}. Upload the project file (.qxw) that is loaded in QLC+. Fixture definitions that are not part of the QLC+ library can be uploaded as .qxf files.\n\n{error}",
+        "data": {
+          "project_file": "Project (.qxw)",
+          "fixture_file": "Fixture definition (.qxf, optional)"
+        }
+      },
+      "fixtures": {
+        "title": "Fixture definitions missing",
+        "description": "These fixtures could not be resolved:\n\n{missing}\n\nUpload a .qxf file to add it, or submit without a file to continue. Fixtures without a definition get no entities and are guarded like lasers.\n\n{error}",
+        "data": {
+          "fixture_file": "Fixture definition (.qxf)"
+        }
+      },
+      "mismatch": {
+        "title": "Project does not match QLC+",
+        "description": "The uploaded project does not match the project that is loaded in QLC+: {details}.\n\nEntities for functions or widgets that differ will not work as expected. Submit to continue anyway or go back and upload the matching project."
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect to QLC+. Is it running with `-w` and reachable?",
+      "invalid_auth": "Invalid username or password.",
+      "invalid_file": "The file could not be read.",
+      "upload_failed": "The upload failed, please try again.",
+      "project_required": "A project file is required."
+    },
+    "abort": {
+      "already_configured": "This QLC+ instance is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "QLC+ options",
+        "description": "Choose the entity groups and polling interval, or upload a new project or fixture definitions. Entities are rebuilt afterwards.\n\n{error}",
+        "data": {
+          "entity_groups": "Entity groups",
+          "poll_interval": "Polling interval",
+          "flash_duration": "Flash button duration",
+          "project_file": "New project (.qxw)",
+          "fixture_file": "Additional fixture definition (.qxf)",
+          "replace_fixtures": "Remove previously uploaded fixture definitions"
+        },
+        "data_description": {
+          "poll_interval": "How often channel values and VC widget states are read. Function states are pushed by QLC+.",
+          "flash_duration": "How long a VC flash button is held when its button entity is pressed."
+        }
+      },
+      "fixtures": {
+        "title": "Fixture definitions missing",
+        "description": "These fixtures could not be resolved:\n\n{missing}\n\nUpload a .qxf file to add it, or submit without a file to continue.\n\n{error}",
+        "data": {
+          "fixture_file": "Fixture definition (.qxf)"
+        }
+      },
+      "mismatch": {
+        "title": "Project does not match QLC+",
+        "description": "The uploaded project does not match the project that is loaded in QLC+: {details}.\n\nSubmit to continue anyway."
+      }
+    },
+    "error": {
+      "invalid_file": "The file could not be read.",
+      "upload_failed": "The upload failed, please try again.",
+      "project_required": "A project file is required."
+    }
+  },
+  "selector": {
+    "entity_groups": {
+      "options": {
+        "functions": "Functions (scenes, chasers, …)",
+        "fixtures": "Fixtures (lights, channels)",
+        "widgets": "Virtual Console widgets"
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "connection": {
+        "name": "Connection"
+      }
+    },
+    "switch": {
+      "blackout": {
+        "name": "Blackout"
+      },
+      "laser_release": {
+        "name": "Laser release"
+      }
+    }
+  },
+  "exceptions": {
+    "laser_locked_channel": {
+      "message": "DMX address {address} belongs to a laser. Turn on \"Laser release\" first."
+    },
+    "laser_locked_function": {
+      "message": "Function {function} switches on a laser. Turn on \"Laser release\" first."
+    },
+    "laser_locked_widget": {
+      "message": "VC widget {widget} controls a laser. Turn on \"Laser release\" first."
+    },
+    "not_connected": {
+      "message": "QLC+ is not reachable: {error}"
+    },
+    "project_missing": {
+      "message": "The project file is missing in {path}. Upload it again in the options."
+    },
+    "project_invalid": {
+      "message": "The stored project could not be read: {error}"
+    },
+    "cannot_connect": {
+      "message": "Cannot connect to QLC+ at {host}."
+    },
+    "entry_required": {
+      "message": "Select the QLC+ instance (config_entry_id)."
+    },
+    "unknown_function": {
+      "message": "Unknown or ambiguous function: {function}."
+    },
+    "bad_address": {
+      "message": "With a universe given, the address must be between 1 and 512."
+    }
+  },
+  "services": {
+    "run_function": {
+      "name": "Run function",
+      "description": "Starts a QLC+ function (scene, chaser, show, …).",
+      "fields": {
+        "function": {"name": "Function", "description": "Function ID or exact name."},
+        "config_entry_id": {"name": "QLC+ instance", "description": "Only needed with more than one QLC+ instance."}
+      }
+    },
+    "stop_function": {
+      "name": "Stop function",
+      "description": "Stops a running QLC+ function.",
+      "fields": {
+        "function": {"name": "Function", "description": "Function ID or exact name."},
+        "config_entry_id": {"name": "QLC+ instance", "description": "Only needed with more than one QLC+ instance."}
+      }
+    },
+    "set_channel": {
+      "name": "Set channel",
+      "description": "Sets a DMX channel through the Simple Desk. The value overrides running functions until the channel is released.",
+      "fields": {
+        "address": {"name": "Address", "description": "DMX address, absolute (1 = universe 1 channel 1, 513 = universe 2 channel 1) or inside the given universe."},
+        "universe": {"name": "Universe", "description": "Optional universe (1-based)."},
+        "value": {"name": "Value", "description": "DMX value 0–255."},
+        "config_entry_id": {"name": "QLC+ instance", "description": "Only needed with more than one QLC+ instance."}
+      }
+    },
+    "release_channel": {
+      "name": "Release channel",
+      "description": "Removes Simple Desk overrides so functions control the channels again. Without address all channels (of the universe) are released.",
+      "fields": {
+        "address": {"name": "Address", "description": "One address or a list of addresses."},
+        "universe": {"name": "Universe", "description": "Optional universe (1-based)."},
+        "config_entry_id": {"name": "QLC+ instance", "description": "Only needed with more than one QLC+ instance."}
+      }
+    },
+    "blackout": {
+      "name": "Blackout",
+      "description": "Turns the blackout on or off.",
+      "fields": {
+        "state": {"name": "State", "description": "On or off."},
+        "config_entry_id": {"name": "QLC+ instance", "description": "Only needed with more than one QLC+ instance."}
+      }
+    },
+    "reload_project": {
+      "name": "Reload project",
+      "description": "Reloads the stored project and fixture files and rebuilds the entities.",
+      "fields": {
+        "config_entry_id": {"name": "QLC+ instance", "description": "Only needed with more than one QLC+ instance."}
+      }
+    }
+  }
+}

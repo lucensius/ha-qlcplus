@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE FixturesMap>
+<FixturesMap xmlns="http://www.qlcplus.org/FixturesMap">
+  <M n="Laserworld">
+    <F n="Laserworld-EL-400RGB-MK2" m="EL-400RGB MK2"/>
+  </M>
+  <M n="Stairville">
+    <F n="Stairville-AF-150" m="AF-150"/>
+  </M>
+  <M n="..">
+    <F n="evil" m="Evil"/>
+  </M>
+</FixturesMap>

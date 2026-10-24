@@ -1,0 +1,86 @@
+run_function:
+  fields:
+    function:
+      required: true
+      example: "Bar Rot"
+      selector:
+        text:
+    config_entry_id:
+      selector:
+        config_entry:
+          integration: qlcplus
+
+stop_function:
+  fields:
+    function:
+      required: true
+      example: 3
+      selector:
+        text:
+    config_entry_id:
+      selector:
+        config_entry:
+          integration: qlcplus
+
+set_channel:
+  fields:
+    address:
+      required: true
+      example: 9
+      selector:
+        number:
+          min: 1
+          max: 32768
+          mode: box
+    universe:
+      selector:
+        number:
+          min: 1
+          max: 64
+          mode: box
+    value:
+      required: true
+      example: 255
+      selector:
+        number:
+          min: 0
+          max: 255
+    config_entry_id:
+      selector:
+        config_entry:
+          integration: qlcplus
+
+release_channel:
+  fields:
+    address:
+      example: [9, 18]
+      selector:
+        object:
+    universe:
+      selector:
+        number:
+          min: 1
+          max: 64
+          mode: box
+    config_entry_id:
+      selector:
+        config_entry:
+          integration: qlcplus
+
+blackout:
+  fields:
+    state:
+      required: true
+      selector:
+        boolean:
+    config_entry_id:
+      selector:
+        config_entry:
+          integration: qlcplus
+
+reload_project:
+  fields:
+    config_entry_id:
+      selector:
+        config_entry:
+          integration: qlcplus
