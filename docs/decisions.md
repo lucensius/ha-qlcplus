@@ -50,3 +50,15 @@ Decisions taken where a reasonable default existed. Newest at the bottom.
     collections, shows or scripts. EFX or RGB matrices on a laser, and scripts
     with commands that can't be analysed, also count as unsafe. Widgets are
     unsafe if they start an unsafe function or control laser channels.
+
+## Phase 2 – client
+
+14. **Liveness:** `autoping=False`, the client answers the server's pings
+    itself and treats 20 s without any frame as a dead connection.
+15. **A request timeout closes the connection.** Without request IDs, a lost
+    reply would shift every later reply. Reconnecting resets the queues.
+16. **Polling lives in the client** (`configure_polling`): nearby patched
+    addresses are merged into a few `getChannelsValues` blocks, and VC widget
+    statuses are polled only for enabled widget entities. Default interval:
+    5 s. `request_poll()` triggers an immediate poll after writes.
+17. **Version detection** uses `GET /simpleDesk` (side-effect free), never `/`.

@@ -7,6 +7,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "custom_components" / "qlcplus"))
+sys.path.insert(0, str(ROOT / "tests"))
 
 DATA = ROOT / "tests" / "data"
 
