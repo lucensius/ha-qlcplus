@@ -62,3 +62,42 @@ Decisions taken where a reasonable default existed. Newest at the bottom.
     statuses are polled only for enabled widget entities. Default interval:
     5 s. `request_poll()` triggers an immediate poll after writes.
 17. **Version detection** uses `GET /simpleDesk` (side-effect free), never `/`.
+
+## Phase 3 – Home Assistant integration
+
+18. **Entity planning is HA-free** (`qlc/planner.py`), so the mapping
+    channel → entity is unit-tested without HA. Rules:
+    * light per head (or fixture level) with a dimmer preset/intensity
+      channel or R+G+B intensity channels. Colour wheel → HS colour mode with
+      the nearest single-colour slot (hue-weighted distance on `Res1`),
+      gobo/effect capabilities → `effect_list`. Smoke/hazer and laser
+      fixtures get no light.
+    * select: Colour/Gobo/Effect/Maintenance/Prism channels with ≥ 2
+      capabilities. Maintenance entities are disabled by default.
+    * number: everything else. Pan/tilt are shown in ° when the mode's physical
+      data gives `PanMax`/`TiltMax`, otherwise in %. Intensity numbers are in %,
+      all other channels raw DMX 0–255, because capabilities are defined in
+      DMX values. 16-bit pairs are combined.
+    * functions: switch, single-shot chasers/sequences: button.
+    * VC: flash buttons → button (enabled), toggle buttons → switch and
+      sliders → number (both disabled by default, polled only when enabled).
+      XY pads are not mapped (pan/tilt numbers cover them).
+19. **Fixture control goes through the Simple Desk** (`CH|`), so HA values
+    override running functions. `qlcplus.release_channel` hands control back.
+20. **unique_id** = `<entry_id>_<key>` with keys `fx<id>[_h<head>]_ch<index>`,
+    `fx<id>[_h<head>]_light`, `fn<id>`, `vc<id>`. They stay stable when the
+    project is uploaded again. Entities/devices that disappear are removed
+    from the registries on setup.
+21. **Files** live in `<config>/qlcplus/<storage_id>/` (random ID chosen in
+    the config flow), the shared library cache in
+    `<config>/qlcplus/library_cache/`.
+22. **Multiple `.qxf` uploads:** HA's file selector accepts one file, so the
+    flow asks for more files only while definitions are missing (loop step).
+23. **Laser release** is a config switch that is *off after every start* (not
+    restored). Turning it off again releases the Simple Desk values HA set
+    on laser channels and stops unsafe functions HA started. For laser
+    selects, an option sends the lowest value of its range ("Laser off"
+    0–49 → 0). Unresolved fixtures are guarded like lasers.
+24. **Flash buttons** are held for a configurable time (default 1 s).
+25. **Setup waits** for the connection (10 s, otherwise `ConfigEntryNotReady`)
+    and for the first function status sync, so states are known immediately.

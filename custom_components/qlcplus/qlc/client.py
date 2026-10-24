@@ -306,6 +306,7 @@ class QLCClient:
                 fut = queue.popleft()
                 if not fut.done():
                     fut.set_exception(QLCConnectionError(f"Connection lost ({reason})"))
+                    fut.exception()  # mark retrieved; a waiting request still raises
         self._pending.clear()
         if was_connected:
             self._emit_connection(False)
@@ -373,7 +374,8 @@ class QLCClient:
                 queue.remove(fut)
             raise
         try:
-            return await asyncio.wait_for(asyncio.shield(fut), self._request_timeout)
+            # on timeout the cancelled future stays queued and swallows a late reply
+            return await asyncio.wait_for(fut, self._request_timeout)
         except TimeoutError:
             # Replies carry no IDs: a lost reply would shift all later ones.
             # Drop the connection so the queues start fresh.

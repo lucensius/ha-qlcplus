@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 
 from .fixture_def import ChannelDef
 from .presets import DIMMER_PRESETS, MASTER_DIMMER_PRESETS, ChannelGroup
-from .project import Function, FunctionType, Project, Widget, WidgetType
+from .project import Function, FunctionType, Project, ProjectFixture, Widget, WidgetType
 from .resolver import ResolvedFixture
 
 LASER_TYPES = frozenset({"Laser"})
@@ -196,6 +197,7 @@ class SafetyInfo:
     """Which channels and project objects can drive a laser above 0."""
 
     laser_fixtures: set[int] = field(default_factory=set)
+    unknown_fixtures: set[int] = field(default_factory=set)  # guarded, no definition
     laser_addresses: set[int] = field(default_factory=set)  # 1-based absolute
     functions: set[int] = field(default_factory=set)  # function IDs that are unsafe
     widgets: set[int] = field(default_factory=set)  # widget IDs that are unsafe
@@ -204,12 +206,22 @@ class SafetyInfo:
         return value > 0 and address in self.laser_addresses
 
 
-def analyse_safety(project: Project, fixtures: dict[int, PatchedFixture]) -> SafetyInfo:
+def analyse_safety(
+    project: Project,
+    fixtures: dict[int, PatchedFixture],
+    unknown: Iterable[ProjectFixture] = (),
+) -> SafetyInfo:
+    """``unknown`` are fixtures without definition; they are treated as lasers."""
     info = SafetyInfo()
     for pf in fixtures.values():
         if pf.is_laser:
             info.laser_fixtures.add(pf.id)
             info.laser_addresses.update(c.address for c in pf.channels)
+    for fx in unknown:
+        info.laser_fixtures.add(fx.id)
+        info.unknown_fixtures.add(fx.id)
+        info.laser_addresses.update(
+            range(fx.absolute_address + 1, fx.absolute_address + fx.channels + 1))
     if not info.laser_fixtures:
         return info
 

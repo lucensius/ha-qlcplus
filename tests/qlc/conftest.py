@@ -15,3 +15,14 @@ DATA = ROOT / "tests" / "data"
 @pytest.fixture
 def data_dir() -> Path:
     return DATA
+
+
+@pytest.fixture(autouse=True)
+def _allow_local_sockets(request):
+    """The HA test plugin blocks sockets; the fake QLC+ server needs localhost."""
+    if "socket_enabled" in request.fixturenames:
+        return
+    try:
+        request.getfixturevalue("socket_enabled")
+    except pytest.FixtureLookupError:
+        pass

@@ -1,0 +1,14 @@
+{
+  "domain": "qlcplus",
+  "name": "QLC+",
+  "codeowners": ["@lucensius"],
+  "config_flow": true,
+  "dependencies": ["file_upload"],
+  "documentation": "https://github.com/lucensius/ha-qlcplus",
+  "integration_type": "hub",
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/lucensius/ha-qlcplus/issues",
+  "loggers": ["custom_components.qlcplus"],
+  "requirements": [],
+  "version": "0.1.0"
+}

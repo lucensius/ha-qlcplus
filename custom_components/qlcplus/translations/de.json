@@ -1,0 +1,194 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Mit QLC+ verbinden",
+        "description": "QLC+ muss im Webmodus laufen (`qlcplus -w`).",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "username": "Benutzername",
+          "password": "Passwort"
+        },
+        "data_description": {
+          "host": "IP-Adresse oder Hostname des Rechners, auf dem QLC+ läuft.",
+          "port": "Port der QLC+-Weboberfläche (Standard 9999).",
+          "username": "Nur nötig, wenn QLC+ mit Web-Authentifizierung (`-wa`) läuft."
+        }
+      },
+      "project": {
+        "title": "Projekt hochladen",
+        "description": "Verbunden mit QLC+ {version}. Lade die Projektdatei (.qxw) hoch, die in QLC+ geladen ist. Fixture-Definitionen, die nicht in der QLC+-Bibliothek enthalten sind, kannst du als .qxf-Dateien hochladen.\n\n{error}",
+        "data": {
+          "project_file": "Projekt (.qxw)",
+          "fixture_file": "Fixture-Definition (.qxf, optional)"
+        }
+      },
+      "fixtures": {
+        "title": "Fixture-Definitionen fehlen",
+        "description": "Diese Fixtures konnten nicht aufgelöst werden:\n\n{missing}\n\nLade eine .qxf-Datei hoch, um sie hinzuzufügen, oder sende das Formular ohne Datei ab, um fortzufahren. Fixtures ohne Definition erhalten keine Entitäten und werden wie Laser abgesichert.\n\n{error}",
+        "data": {
+          "fixture_file": "Fixture-Definition (.qxf)"
+        }
+      },
+      "mismatch": {
+        "title": "Projekt passt nicht zu QLC+",
+        "description": "Das hochgeladene Projekt passt nicht zum in QLC+ geladenen Projekt: {details}.\n\nEntitäten für abweichende Funktionen oder Widgets funktionieren nicht wie erwartet. Sende das Formular ab, um trotzdem fortzufahren, oder gehe zurück und lade das passende Projekt hoch."
+      }
+    },
+    "error": {
+      "cannot_connect": "Keine Verbindung zu QLC+. Läuft es mit `-w` und ist es erreichbar?",
+      "invalid_auth": "Benutzername oder Passwort ungültig.",
+      "invalid_file": "Die Datei konnte nicht gelesen werden.",
+      "upload_failed": "Der Upload ist fehlgeschlagen, bitte erneut versuchen.",
+      "project_required": "Eine Projektdatei ist erforderlich."
+    },
+    "abort": {
+      "already_configured": "Diese QLC+-Instanz ist bereits eingerichtet."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "QLC+-Optionen",
+        "description": "Wähle die Entitätsgruppen und das Poll-Intervall oder lade ein neues Projekt bzw. weitere Fixture-Definitionen hoch. Die Entitäten werden danach neu aufgebaut.\n\n{error}",
+        "data": {
+          "entity_groups": "Entitätsgruppen",
+          "poll_interval": "Poll-Intervall",
+          "flash_duration": "Dauer für Flash-Buttons",
+          "project_file": "Neues Projekt (.qxw)",
+          "fixture_file": "Weitere Fixture-Definition (.qxf)",
+          "replace_fixtures": "Bisher hochgeladene Fixture-Definitionen entfernen"
+        },
+        "data_description": {
+          "poll_interval": "Wie oft Kanalwerte und VC-Widget-Zustände gelesen werden. Funktionszustände meldet QLC+ von sich aus.",
+          "flash_duration": "Wie lange ein VC-Flash-Button gehalten wird, wenn seine Button-Entität gedrückt wird."
+        }
+      },
+      "fixtures": {
+        "title": "Fixture-Definitionen fehlen",
+        "description": "Diese Fixtures konnten nicht aufgelöst werden:\n\n{missing}\n\nLade eine .qxf-Datei hoch, um sie hinzuzufügen, oder sende das Formular ohne Datei ab, um fortzufahren.\n\n{error}",
+        "data": {
+          "fixture_file": "Fixture-Definition (.qxf)"
+        }
+      },
+      "mismatch": {
+        "title": "Projekt passt nicht zu QLC+",
+        "description": "Das hochgeladene Projekt passt nicht zum in QLC+ geladenen Projekt: {details}.\n\nSende das Formular ab, um trotzdem fortzufahren."
+      }
+    },
+    "error": {
+      "invalid_file": "Die Datei konnte nicht gelesen werden.",
+      "upload_failed": "Der Upload ist fehlgeschlagen, bitte erneut versuchen.",
+      "project_required": "Eine Projektdatei ist erforderlich."
+    }
+  },
+  "selector": {
+    "entity_groups": {
+      "options": {
+        "functions": "Funktionen (Szenen, Chaser, …)",
+        "fixtures": "Geräte (Lichter, Kanäle)",
+        "widgets": "Virtual-Console-Widgets"
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "connection": {
+        "name": "Verbindung"
+      }
+    },
+    "switch": {
+      "blackout": {
+        "name": "Blackout"
+      },
+      "laser_release": {
+        "name": "Laser-Freigabe"
+      }
+    }
+  },
+  "exceptions": {
+    "laser_locked_channel": {
+      "message": "DMX-Adresse {address} gehört zu einem Laser. Schalte zuerst die „Laser-Freigabe“ ein."
+    },
+    "laser_locked_function": {
+      "message": "Funktion {function} schaltet einen Laser ein. Schalte zuerst die „Laser-Freigabe“ ein."
+    },
+    "laser_locked_widget": {
+      "message": "VC-Widget {widget} steuert einen Laser. Schalte zuerst die „Laser-Freigabe“ ein."
+    },
+    "not_connected": {
+      "message": "QLC+ ist nicht erreichbar: {error}"
+    },
+    "project_missing": {
+      "message": "Die Projektdatei fehlt in {path}. Lade sie in den Optionen erneut hoch."
+    },
+    "project_invalid": {
+      "message": "Das gespeicherte Projekt konnte nicht gelesen werden: {error}"
+    },
+    "cannot_connect": {
+      "message": "Keine Verbindung zu QLC+ unter {host}."
+    },
+    "entry_required": {
+      "message": "Wähle die QLC+-Instanz aus (config_entry_id)."
+    },
+    "unknown_function": {
+      "message": "Unbekannte oder mehrdeutige Funktion: {function}."
+    },
+    "bad_address": {
+      "message": "Mit angegebenem Universe muss die Adresse zwischen 1 und 512 liegen."
+    }
+  },
+  "services": {
+    "run_function": {
+      "name": "Funktion starten",
+      "description": "Startet eine QLC+-Funktion (Szene, Chaser, Show, …).",
+      "fields": {
+        "function": {"name": "Funktion", "description": "Funktions-ID oder exakter Name."},
+        "config_entry_id": {"name": "QLC+-Instanz", "description": "Nur nötig bei mehreren QLC+-Instanzen."}
+      }
+    },
+    "stop_function": {
+      "name": "Funktion stoppen",
+      "description": "Stoppt eine laufende QLC+-Funktion.",
+      "fields": {
+        "function": {"name": "Funktion", "description": "Funktions-ID oder exakter Name."},
+        "config_entry_id": {"name": "QLC+-Instanz", "description": "Nur nötig bei mehreren QLC+-Instanzen."}
+      }
+    },
+    "set_channel": {
+      "name": "Kanal setzen",
+      "description": "Setzt einen DMX-Kanal über den Simple Desk. Der Wert hat Vorrang vor laufenden Funktionen, bis der Kanal freigegeben wird.",
+      "fields": {
+        "address": {"name": "Adresse", "description": "DMX-Adresse, absolut (1 = Universe 1 Kanal 1, 513 = Universe 2 Kanal 1) oder innerhalb des angegebenen Universe."},
+        "universe": {"name": "Universe", "description": "Optionales Universe (ab 1)."},
+        "value": {"name": "Wert", "description": "DMX-Wert 0–255."},
+        "config_entry_id": {"name": "QLC+-Instanz", "description": "Nur nötig bei mehreren QLC+-Instanzen."}
+      }
+    },
+    "release_channel": {
+      "name": "Kanal freigeben",
+      "description": "Entfernt Simple-Desk-Werte, damit wieder die Funktionen die Kanäle steuern. Ohne Adresse werden alle Kanäle (des Universe) freigegeben.",
+      "fields": {
+        "address": {"name": "Adresse", "description": "Eine Adresse oder eine Liste von Adressen."},
+        "universe": {"name": "Universe", "description": "Optionales Universe (ab 1)."},
+        "config_entry_id": {"name": "QLC+-Instanz", "description": "Nur nötig bei mehreren QLC+-Instanzen."}
+      }
+    },
+    "blackout": {
+      "name": "Blackout",
+      "description": "Schaltet den Blackout ein oder aus.",
+      "fields": {
+        "state": {"name": "Zustand", "description": "Ein oder aus."},
+        "config_entry_id": {"name": "QLC+-Instanz", "description": "Nur nötig bei mehreren QLC+-Instanzen."}
+      }
+    },
+    "reload_project": {
+      "name": "Projekt neu laden",
+      "description": "Lädt die gespeicherten Projekt- und Fixture-Dateien neu und baut die Entitäten neu auf.",
+      "fields": {
+        "config_entry_id": {"name": "QLC+-Instanz", "description": "Nur nötig bei mehreren QLC+-Instanzen."}
+      }
+    }
+  }
+}

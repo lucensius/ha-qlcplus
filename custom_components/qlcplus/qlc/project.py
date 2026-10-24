@@ -319,7 +319,7 @@ def _parse_widget(el, parent: Widget | None, path: list[str], out: dict[int, Wid
     if widget.id >= 0:
         out[widget.id] = widget
     if wtype in (WidgetType.FRAME, WidgetType.SOLO_FRAME):
-        sub_path = path + [widget.caption] if widget.caption else path
+        sub_path = [*path, widget.caption] if widget.caption else path
         for child in el:
             if child.tag in WIDGET_TAGS:
                 _parse_widget(child, widget, sub_path, out)
