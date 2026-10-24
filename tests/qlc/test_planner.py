@@ -54,7 +54,7 @@ async def test_selects_and_numbers(plan):
     assert macro.device == "fx0" and macro.name == "Chaser / Bewegungsmakros"
     assert not selects["fx0_ch37"].enabled_default  # maintenance
     style = selects["fx1_ch0"]
-    assert style.laser and [o.label for o in style.options][0] == "Laser off"
+    assert style.laser and style.options[0].label == "Laser off"
 
     numbers = {n.key: n for n in plan.numbers}
     pan = numbers["fx0_h0_ch0"]

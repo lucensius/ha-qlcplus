@@ -1,5 +1,6 @@
 """Make the HA-free library importable as top-level package ``qlc``."""
 
+import contextlib
 import sys
 from pathlib import Path
 
@@ -22,7 +23,5 @@ def _allow_local_sockets(request):
     """The HA test plugin blocks sockets; the fake QLC+ server needs localhost."""
     if "socket_enabled" in request.fixturenames:
         return
-    try:
+    with contextlib.suppress(pytest.FixtureLookupError):
         request.getfixturevalue("socket_enabled")
-    except pytest.FixtureLookupError:
-        pass

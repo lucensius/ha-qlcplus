@@ -69,14 +69,14 @@ class QLCChannelEntity(QLCEntity):
         return 65535 if self._channel.fine is not None else 255
 
     async def async_write_raw(self, value: float) -> None:
-        value = max(0, min(self.raw_max, int(round(value))))
+        raw = max(0, min(self.raw_max, round(value)))
         if self._channel.fine is not None:
             await self.coordinator.async_set_channels({
-                self._channel.address: value >> 8,
-                self._channel.fine.address: value & 0xFF,
+                self._channel.address: raw >> 8,
+                self._channel.fine.address: raw & 0xFF,
             })
         else:
-            await self.coordinator.async_set_channels({self._channel.address: value})
+            await self.coordinator.async_set_channels({self._channel.address: raw})
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:

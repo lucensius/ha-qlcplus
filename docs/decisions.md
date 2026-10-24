@@ -101,3 +101,18 @@ Decisions taken where a reasonable default existed. Newest at the bottom.
 24. **Flash buttons** are held for a configurable time (default 1 s).
 25. **Setup waits** for the connection (10 s, otherwise `ConfigEntryNotReady`)
     and for the first function status sync, so states are known immediately.
+
+## Phase 4 – delivery
+
+26. **CI:** hassfest and HACS validation (`ignore: brands`, since the
+    integration is not in home-assistant/brands), plus ruff and pytest on
+    Python 3.13.
+27. **Live test** (`tests/integration/test_live.py`) runs only with
+    `QLC_LIVE_HOST`. It checks that the rig is idle first, uses only actions
+    that don't change the result (a scene that writes zeros onto channels
+    that are already 0, a strobe value inside the "open" range), checks the
+    laser lock without sending anything, and in `finally` releases every
+    Simple Desk value and function it may have left. A before/after
+    snapshot of all channels and function states must be identical.
+    Blackout/Grand Master is not tested live, because the previous GM value
+    can't be read.
