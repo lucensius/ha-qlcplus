@@ -26,3 +26,27 @@ Decisions taken where a reasonable default existed. Newest at the bottom.
    only affects GM-controlled (intensity) channels.
 8. **Project upload to QLC+ (`POST /loadProject`) is not used.** It would
    replace the running project; noted as a possible future option.
+
+## Phase 1 – parsers
+
+9. **The library lives in `custom_components/qlcplus/qlc/`** and uses only
+   relative imports, so its tests import it as top-level `qlc` without Home
+   Assistant.
+10. **Fixture library source:** raw files from the QLC+ GitHub repo pinned to
+    tag `QLC+_4.14.4` (matches the tested QLC+ version). `FixturesMap.xml` is
+    cached for 30 days. If it can't be refreshed, the stale copy is used.
+    Fixture files are cached forever, since one tag never changes.
+    Manufacturer = map directory with `_` → space, like QLC+ does it.
+11. **Matching** is exact first, then case-insensitive, for manufacturer, model
+    and mode. Generic dimmers and generic RGB panels are created in code, like
+    QLC+ does it.
+12. **Heads:** a mode with more than one head becomes heads; channels outside
+    all heads (and every channel of single-head fixtures) form the
+    fixture-level channel set. Head labels come from a word sequence shared
+    by all channel names of a head ("… Kopf 1"), otherwise "Head N".
+13. **Laser safety analysis (conservative):** every channel of a fixture with
+    type `Laser` is a laser channel. A function is unsafe if it writes a
+    value > 0 to a laser channel, directly or through chasers, sequences,
+    collections, shows or scripts. EFX or RGB matrices on a laser, and scripts
+    with commands that can't be analysed, also count as unsafe. Widgets are
+    unsafe if they start an unsafe function or control laser channels.
